@@ -62,7 +62,7 @@ class Example(QWidget):
         if event.key() == Qt.Key.Key_PageDown:
             if self.spn >= 0.052:
                 self.spn -= 0.05
-        step = 0.01  # Шаг перемещения карты
+        step = self.spn / 3  # Шаг перемещения карты
         if event.key() == Qt.Key.Key_Up:
             self.ll[1] += step
         elif event.key() == Qt.Key.Key_Down:
