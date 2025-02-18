@@ -12,7 +12,7 @@ SCREEN_SIZE = [800, 450]
 
 
 class Example(QWidget):
-    coord = "-42.278347,26.703022"
+    ll = [42.278347,26.703022]
     spn = 0.002
     def __init__(self):
         super().__init__()
@@ -26,7 +26,7 @@ class Example(QWidget):
 
         # Готовим запрос.
 
-        map_request = f"{server_address}ll={self.coord}&spn={self.spn},{self.spn}&apikey={api_key}"
+        map_request = f"{server_address}ll={self.ll[0]},{self.ll[1]}&spn={self.spn},{self.spn}&apikey={api_key}"
         response = requests.get(map_request)
 
         if not response:
@@ -59,12 +59,21 @@ class Example(QWidget):
         if event.key() == Qt.Key.Key_PageUp:
             if self.spn <= 31.948:
                 self.spn += 0.05
-            self.getImage()
         if event.key() == Qt.Key.Key_PageDown:
             if self.spn >= 0.052:
                 self.spn -= 0.05
-            self.getImage()
-
+        step = 0.01  # Шаг перемещения карты
+        if event.key() == Qt.Key.Key_Up:
+            self.ll[1] += step
+        elif event.key() == Qt.Key.Key_Down:
+            self.ll[1] -= step
+        elif event.key() == Qt.Key.Key_Left:
+            self.ll[0] -= step
+        elif event.key() == Qt.Key.Key_Right:
+            self.ll[0] += step
+        self.ll[0] = max(-180, min(180, self.ll[0]))
+        self.ll[1] = max(-90, min(90, self.ll[1]))
+        self.getImage()
 
 
 if __name__ == '__main__':
