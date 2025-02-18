@@ -12,7 +12,7 @@ SCREEN_SIZE = [800, 450]
 
 
 class Example(QWidget):
-    ll = [42.278347,26.703022]
+    ll = [-42.278347,26.703022]
     spn = 0.002
     def __init__(self):
         super().__init__()
