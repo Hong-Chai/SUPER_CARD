@@ -5,28 +5,28 @@ import requests
 from PyQt6 import QtCore, QtWidgets
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
-from PyQt6.QtWidgets import QApplication, QWidget, QLabel
+from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QPushButton
 
 SCREEN_SIZE = [800, 450]
 
 
-
 class Example(QWidget):
-    ll = [-42.278347,26.703022]
-    spn = 0.002
+    ll = [42.278347, 26.703022]
+    spn = 0.2
+    t = "light"
+
     def __init__(self):
         super().__init__()
         self.initUI()
         self.getImage()
 
-
     def getImage(self):
-        server_address = 'https://static-maps.yandex.ru/v1?'
-        api_key = 'f3a0fe3a-b07e-4840-a1da-06f18b2ddf13'
+        server_address = "https://static-maps.yandex.ru/v1?"
+        api_key = "f3a0fe3a-b07e-4840-a1da-06f18b2ddf13"
 
         # Готовим запрос.
 
-        map_request = f"{server_address}ll={self.ll[0]},{self.ll[1]}&spn={self.spn},{self.spn}&apikey={api_key}"
+        map_request = f"{server_address}ll={self.ll[0]},{self.ll[1]}&spn={self.spn},{self.spn}&theme={self.t}&apikey={api_key}"
         response = requests.get(map_request)
 
         if not response:
@@ -45,12 +45,23 @@ class Example(QWidget):
 
     def initUI(self):
         self.setGeometry(100, 100, *SCREEN_SIZE)
-        self.setWindowTitle('Отображение карты')
+        self.setWindowTitle("Отображение карты")
+        theme = QPushButton(self)
+        theme.setText("Переключить тему")
+        theme.move(620, 20)
+        theme.clicked.connect(self.chng_t)
 
         ## Изображение
         self.image = QLabel(self)
         self.image.move(0, 0)
         self.image.resize(600, 450)
+
+    def chng_t(self):
+        if self.t == "light":
+            self.t = "dark"
+        else:
+            self.t = "light"
+        self.getImage()
 
     def closeEvent(self, event):
         os.remove(self.map_file)
@@ -76,7 +87,7 @@ class Example(QWidget):
         self.getImage()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QApplication(sys.argv)
     ex = Example()
     ex.show()
